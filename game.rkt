@@ -41,9 +41,9 @@
   ;;else do nothing
   mouse)
  ;;constantly move mouse to the left
- (set! mposx (- mposx 20))
+ (set! mposx (- mposx 40))
  ;;if mouse reaches end of screen, game over
- (if (< mposx 51)
+ (if (< mposx 60)
   (begin
    (set! mouse gameover)
    (set! mposx 800)
