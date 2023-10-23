@@ -4,7 +4,7 @@
 ;;sets the game state to true
 (define game #t)
 
-(define scene (empty-scene 1600 900))
+(define scene (place-image (text "Use W or S to begin/play." 24 "black") 150 850 (empty-scene 1600 900)))
 
 ;;cat is 195 pixels wide and 214 high
 (define cat (scale 0.8 (bitmap "./cat.png")))
@@ -67,5 +67,6 @@
 
 (define (drawframe img) (place-image img 78 posy (place-image mouse mposx mposy (place-image (text (~v score) 24 "black") 1550 850 scene))))
 
-(big-bang cat (on-key move) (on-draw drawframe) (on-tick mouseai 0.1) (name "Cat and mouse") (stop-when endgame last))
+(big-bang cat (on-key move) (on-draw drawframe) (on-tick mouseai 0.025) (name "Cat and mouse") (stop-when endgame last))
+(sleep 3)
 (big-bang cat (on-tick endrotate) (on-draw endframe))
