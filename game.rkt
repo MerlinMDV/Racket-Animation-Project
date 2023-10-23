@@ -9,7 +9,7 @@
 ;;cat is 195 pixels wide and 214 high
 (define cat (scale 0.8 (bitmap "./cat.png")))
 (define mouse (flip-horizontal (bitmap "./mouse.png")))
-(define gameover (place-image (text "GAME OVER" 50 "black") 800 450 (rectangle 1600 900 "solid" "white")))
+(define gameover (place-image (text "GAME OVER. now watch the consequences of your sins." 30 "black") 800 450 (rectangle 1600 900 "solid" "white")))
 
 ;;cat starts in left-middle side of screen
 (define posx 78)
@@ -35,19 +35,11 @@
 ;;mouse ai also controls the score
 
 (define (mouseai img)
- ;;check if game is over, (not) function checks if game == False
-  (if (not game)
-   (error "game over")
-  ;;else do nothing
-  mouse)
  ;;constantly move mouse to the left
- (set! mposx (- mposx 40))
+ (set! mposx (- mposx 20))
  ;;if mouse reaches end of screen, game over
  (if (< mposx 60)
   (begin
-   (set! mouse gameover)
-   (set! mposx 800)
-   (set! mposy 450)
    (set! game #f)
   )
   ;;else do nothing
@@ -57,10 +49,23 @@
   (begin (set! score (+ score 1)) (begin (set! mposx 1400) (set! mposy (random 100 800))))
   ;;else do nothing
   mouse)
- 
+  
  ;;required for mouseai function to work (self statement)
  img)
 
+(define (last scene)
+  gameover
+)
+
+(define (endgame p)
+  (not game)
+)
+
+;;game over draw handler and tick function
+(define (endrotate img) (rotate 5 img))
+(define (endframe img) (place-image img 800 450 (empty-scene 1600 900)))
+
 (define (drawframe img) (place-image img 78 posy (place-image mouse mposx mposy (place-image (text (~v score) 24 "black") 1550 850 scene))))
 
-(big-bang cat (on-key move) (on-draw drawframe) (on-tick mouseai 0.1) (name "Cat and mouse"))
+(big-bang cat (on-key move) (on-draw drawframe) (on-tick mouseai 0.1) (name "Cat and mouse") (stop-when endgame last))
+(big-bang cat (on-tick endrotate) (on-draw endframe))
